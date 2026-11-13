@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeAnchor｜共同LPの案件受付</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header class="header">
+        <img
+            src="css/img/logo_lp_test.png"
+            alt="PrimeAnchor"
+            class="logo"
+        >
+        <span>共同LPの案件受付</span>
+    </header>
+
+    <!-- 追加：進行バー（いまどの工程か ＋ STEP2では営業台帳を常に表示） -->
+    <div class="stepbar">
+        <div class="stepbar-inner">
+            <ol class="steps" aria-label="進行状況">
+                <li id="step-1" class="step is-current" aria-current="step">
+                    <span class="step-num">1</span>営業台帳を作る
+                </li>
+                <li class="step-arrow" aria-hidden="true">→</li>
+                <li id="step-2" class="step">
+                    <span class="step-num">2</span>LPを公開して受け付ける
+                </li>
+            </ol>
+
+            <!-- STEP2のあいだ、台帳の中身を1行で見せる -->
+            <div id="ledger-strip" class="ledger-strip" style="display: none;">
+                <span class="strip-title">
+                    営業台帳 <span id="strip-count">0社</span>
+                </span>
+                <ul id="strip-list" class="strip-list"></ul>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========== STEP 1：営業台帳を作る ========== -->
+    <main id="stage1" class="workspace">
+
+        <!-- 左：説明とボタン -->
+        <section class="publish-area">
+            <p class="section-label">まずは、既存顧客を整理する</p>
+            <h1>営業台帳を、<br>つくろう。</h1>
+
+            <p class="stage-lead">
+                共同LPに届く問い合わせは、この台帳と照合して振り分けます。
+                ボタンを押すと、既存顧客が台帳に登録されます。
+            </p>
+
+            <button id="make-ledger" class="secondary-button" type="button">
+                営業台帳を作る <span>＋</span>
+            </button>
+
+            <!-- 台帳ができたら表示 -->
+            <button id="next-stage" class="primary-button" type="button"
+                    style="display: none;">
+                次へ：LPを公開する <span>→</span>
+            </button>
+
+            <p id="ledger-status" class="status" role="status"
+               aria-live="polite">
+                最初に、照合のもとになる営業台帳を作ります
+            </p>
+        </section>
+
+        <!-- 右：営業台帳 -->
+        <section id="ledger" class="reception-area">
+            <div class="reception-heading">
+                <h2>営業台帳</h2>
+                <span id="ledger-count" class="count">0社</span>
+            </div>
+
+            <div id="ledger-empty" class="waiting">
+                <div class="mailbox" aria-hidden="true">▤</div>
+                <p>まだ営業台帳はありません</p>
+            </div>
+
+            <ul id="ledger-list" class="ledger-list"></ul>
+        </section>
+
+    </main>
+
+
+    <!-- ========== STEP 2：LPを公開して受け付ける ========== -->
+    <main id="stage2" class="workspace" style="display: none;">
+
+        <!-- 左：LPのプレビュー -->
+        <section class="publish-area">
+            <p class="section-label">まずは、顧客との接点をつくる</p>
+            <h1>共同LPを、<br>公開しよう。</h1>
+
+            <div id="preview" class="preview">
+                <div class="preview-bar">
+                    <span class="window-dots">● ● ●</span>
+                    <span id="preview-status">公開前</span>
+                </div>
+
+                <div class="preview-body">
+                    <img
+                        src="css/img/logo_lp_test.png"
+                        alt="PrimeAnchor"
+                        class="preview-logo"
+                    >
+
+                    <p class="preview-copy">
+                        パートナーの<br>
+                        顧客接点を、<br>
+                        商談のきっかけに。
+                    </p>
+
+                    <div class="preview-link">サービスについて相談する →</div>
+
+                    <div class="preview-lines">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+
+                <span id="published-stamp" class="published-stamp">
+                    公開中
+                </span>
+            </div>
+
+            <button id="publish" class="primary-button" type="button">
+                LPを公開する <span>↗</span>
+            </button>
+
+            <p id="status" class="status" role="status" aria-live="polite">
+                公開の準備ができています
+            </p>
+        </section>
+
+        <!-- 右：問い合わせ受付 -->
+        <section class="reception-area">
+            <div class="reception-heading">
+                <h2>問い合わせ受付</h2>
+                <span id="count" class="count">0件</span>
+            </div>
+
+            <!-- 問い合わせが来るまでの画面 -->
+            <div id="waiting" class="waiting">
+                <div class="mailbox" aria-hidden="true">〒</div>
+                <p id="waiting-text">まだ問い合わせはありません</p>
+                <span id="waiting-dots" style="display: none;">● ● ●</span>
+            </div>
+
+            <!-- 問い合わせ -->
+            <div id="inquiry" style="display: none;">
+                <div class="arrival">
+                    <span class="envelope" aria-hidden="true">✉</span>
+                    <span>問い合わせが届きました</span>
+                </div>
+
+                <p class="company-label">お問い合わせ企業</p>
+                <h3 id="company"></h3>
+                <p class="source">
+                    共同LPからのご相談（経由：<span id="partner"></span>）
+                </p>
+
+                <button id="check" class="check-button" type="button">
+                    バッティングを確認する <span>→</span>
+                </button>
+            </div>
+
+            <!-- 照合中 -->
+            <div id="checking" class="checking" style="display: none;"
+                 role="status">
+                <div class="scan-track">
+                    <span></span>
+                </div>
+                <p>営業台帳を照合しています…</p>
+            </div>
+
+            <!-- 判定結果 -->
+            <div id="result" class="result" style="display: none;"
+                 aria-live="polite">
+                <div id="result-symbol" class="result-symbol"></div>
+
+                <div>
+                    <p id="result-title" class="result-title"></p>
+                    <p id="result-message" class="result-message"></p>
+                </div>
+            </div>
+
+            <!-- 操作ボタン（判定結果のあとに表示） -->
+            <div id="actions" class="actions" style="display: none;">
+                <p id="actions-label" class="actions-label">
+                    この問い合わせを、どう振り分けますか？
+                </p>
+
+                <div class="action-grid">
+                    <!-- 下の「note」には、選べる理由／選べない理由が入る -->
+                    <button class="action-button" type="button"
+                            data-action="register">
+                        <span class="action-label">新規登録</span>
+                        <span class="action-note"></span>
+                    </button>
+                    <button class="action-button" type="button"
+                            data-action="handoff">
+                        <span class="action-label">担当者に<wbr>引き継ぐ</span>
+                        <span class="action-note"></span>
+                    </button>
+                    <button class="action-button" type="button"
+                            data-action="merge">
+                        <span class="action-label">登録済み案件に<wbr>まとめる</span>
+                        <span class="action-note"></span>
+                    </button>
+                </div>
+
+                <p id="action-message" class="action-message"
+                   role="status" aria-live="polite"></p>
+            </div>
+
+            <!-- 3件すべて終わったとき -->
+            <div id="finished" class="result is-ok" style="display: none;"
+                 aria-live="polite">
+                <div class="result-symbol">✓</div>
+
+                <div>
+                    <p class="result-title">振り分けが完了しました</p>
+                    <p id="finished-message" class="result-message"></p>
+                </div>
+            </div>
+
+            <button id="reset" class="reset-button"
+                    type="button" style="display: none;">
+                もう一度試す ↻
+            </button>
+        </section>
+
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="js/dr.js"></script>
+</body>
+</html>
